@@ -36,5 +36,18 @@ module devhub::devcard {
         cards: ObjectTable<u64, DevCard>
     }
 
+    struct CardCreated has copy, drop {
+        id: ID,
+        name: String,
+        owner: address,
+        title: String,
+        contact: String,
+    }
+
+    struct DescriptionUpdated has copy, drop {
+        name: String,
+        owner: address,
+        new_description: String
+    }
 
 }
