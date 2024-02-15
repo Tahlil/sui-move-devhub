@@ -15,5 +15,26 @@ module devhub::devcard {
     const INSUFFICIENT_FUND: u64 = 1;
     const MIN_CARD_COST: u64 = 2;
 
-    
+    struct DevCard has key, store {
+        id: UID,
+        name: String, 
+        owner: address,
+        title: String,
+        img_url: Url,
+        description: Option<String>,
+        years_of_exp: u8,
+        technologies: String,
+        portfolio: String,
+        contact: String,
+        open_to_work: bool,
+    }
+
+    struct DevHub has key {
+        id: UID,
+        owner: address,
+        counter: u64,
+        cards: ObjectTable<u64, DevCard>
+    }
+
+
 }
