@@ -50,4 +50,16 @@ module devhub::devcard {
         new_description: String
     }
 
+    
+    fun init(ctx: &mut sui::tx_context::TxContext) {
+        transfer::share_object(
+            DevHub {
+                id: object::new(ctx),
+                owner: tx_context::sender(ctx),
+                counter: 0,
+                cards: object_table::new(ctx)
+            }
+        ); 
+    }
+
 }
