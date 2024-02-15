@@ -62,4 +62,34 @@ module devhub::devcard {
         ); 
     }
 
+    public entry fun create_card(
+        name: vector<u8>,
+        title: vector<u8>,
+        img_url: vector<u8>,
+        years_of_exp: u8,
+        technologies: vector<u8>,
+        portfolio: vector<u8>,
+        contact: vector<u8>,
+        payment: Coin<Sui>,
+        devhub: &mut DevHub,
+        ctx: &mut TxContext
+    ){
+        let value = coin::value(&payment);
+        assert!(value == MIN_CARD_COST, INSUFFICIENT_FUND);
+        transfer::public_transfer(payment, devhub.owner);
+        devhub.counter += 1;
+        let id = object::new(ctx);
+
+        event::emit(
+            CardCreated {
+                id: object::uid_to_inner(&id),
+                name: string::utf8(name),
+                owner: tx_context::sender(ctx),
+                title: string::utf8(title),
+                contact: string::utf8(contact),
+            }
+        );
+
+    }
+
 }
