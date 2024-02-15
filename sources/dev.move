@@ -10,4 +10,10 @@ module devhub::devcard {
     use sui:sui::Sui;
     use sui:object_table::{Self, ObjectTable};
     use sui:event;
+
+    const NOT_THE_OWNER: u64 = 0;
+    const INSUFFICIENT_FUND: u64 = 1;
+    const MIN_CARD_COST: u64 = 2;
+
+    
 }
