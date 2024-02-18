@@ -90,6 +90,22 @@ module devhub::devcard {
             }
         );
 
+        let devcard = DevCard(
+            id: id,
+            name: string::utf8(name), 
+            owner: address,
+            title: string::utf8(title),
+            img_url: url::new_unsafe_from_bytes(img_url),
+            description: option::none(),
+            years_of_exp,
+            technologies: string::utf8(technologies),
+            portfolio: string::utf8(portfolio),
+            contact: string::utf8(contact),
+            open_to_work: true
+        );
+
+        object_table::add(&mut devhub.cards, devhub.counter, devcard);
+
     }
 
 }
