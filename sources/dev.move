@@ -105,6 +105,24 @@ module devhub::devcard {
         );
 
         object_table::add(&mut devhub.cards, devhub.counter, devcard);
+    }
+
+    public entry fun update_card_description(devhub: &mut devhub, new_description: vector<u8>, id: u64, ctx: &mut TxContext){
+        let user_card = object_table::borrow_mut(&mut devhub.cards, id);
+        assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
+        
+        let old_value = option::swap_or_fill(&mut user_card.description, string::utf8(new_description));
+
+        event::emit(
+            DescriptionUpdated{
+                name: user_card.name,
+                owner: user_card.owner,
+                new_description: string::utf8(new_description),
+            }
+        );
+
+        _ = old_value;
+
 
     }
 
