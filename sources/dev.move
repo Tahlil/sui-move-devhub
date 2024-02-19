@@ -107,7 +107,7 @@ module devhub::devcard {
         object_table::add(&mut devhub.cards, devhub.counter, devcard);
     }
 
-    public entry fun update_card_description(devhub: &mut devhub, new_description: vector<u8>, id: u64, ctx: &mut TxContext){
+    public entry fun update_card_description(devhub: &mut DevHub, new_description: vector<u8>, id: u64, ctx: &mut TxContext){
         let user_card = object_table::borrow_mut(&mut devhub.cards, id);
         assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
         
@@ -122,8 +122,13 @@ module devhub::devcard {
         );
 
         _ = old_value;
+    }
 
+    public entry fun deactivate_card(devhub: &mut DevHub, id: u64, ctx: &mut TxContext){
+        let user_card = object_table::borrow_mut(&mut devhub.cards, id);
+        assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
 
+        user_card.open_to_work = false;
     }
 
 }
