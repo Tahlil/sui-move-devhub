@@ -2,14 +2,14 @@ module devhub::devcard {
     use std::option::{Self, Option};
     use std::string::{Self, String};
 
-    use sui:transfer;
-    use sui:object::{Self, UID, ID};
-    use sui:tx_context::{Self, TxConext};
-    use sui:url::{Self, Url};
-    use sui:coin::{Self, Coin};
-    use sui:sui::Sui;
-    use sui:object_table::{Self, ObjectTable};
-    use sui:event;
+    use sui::transfer;
+    use sui::object::{Self, UID, ID};
+    use sui::tx_context::{Self, TxContext};
+    use sui::url::{Self, Url};
+    use sui::coin::{Self, Coin};
+    use sui::sui::SUI;
+    use sui::object_table::{Self, ObjectTable};
+    use sui::event;
 
     const NOT_THE_OWNER: u64 = 0;
     const INSUFFICIENT_FUND: u64 = 1;
@@ -70,14 +70,14 @@ module devhub::devcard {
         technologies: vector<u8>,
         portfolio: vector<u8>,
         contact: vector<u8>,
-        payment: Coin<Sui>,
+        payment: Coin<SUI>,
         devhub: &mut DevHub,
         ctx: &mut TxContext
     ){
         let value = coin::value(&payment);
         assert!(value == MIN_CARD_COST, INSUFFICIENT_FUND);
         transfer::public_transfer(payment, devhub.owner);
-        devhub.counter += 1;
+        devhub.counter = devhub.counter + 1;
         let id = object::new(ctx);
 
         event::emit(
@@ -90,10 +90,11 @@ module devhub::devcard {
             }
         );
 
-        let devcard = DevCard(
+
+        let devcard = DevCard {
             id: id,
-            name: string::utf8(name), 
-            owner: address,
+            name: string::utf8(name),
+            owner: tx_context::sender(ctx),
             title: string::utf8(title),
             img_url: url::new_unsafe_from_bytes(img_url),
             description: option::none(),
@@ -101,8 +102,8 @@ module devhub::devcard {
             technologies: string::utf8(technologies),
             portfolio: string::utf8(portfolio),
             contact: string::utf8(contact),
-            open_to_work: true
-        );
+            open_to_work: true,
+        };
 
         object_table::add(&mut devhub.cards, devhub.counter, devcard);
     }
