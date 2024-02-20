@@ -107,8 +107,8 @@ module devhub::devcard {
         object_table::add(&mut devhub.cards, devhub.counter, devcard);
     }
 
-    public entry fun update_card_description(devhub: &mut DevHub, new_description: vector<u8>, id: u64, ctx: &mut TxContext){
-        let user_card = object_table::borrow_mut(&mut devhub.cards, id);
+    public entry fun update_card_description(devhub: &mut DevHub, new_description: vector<u8>, _id: u64, ctx: &mut TxContext){
+        let user_card = object_table::borrow_mut(&mut devhub.cards, _id);
         assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
         
         let old_value = option::swap_or_fill(&mut user_card.description, string::utf8(new_description));
@@ -124,38 +124,38 @@ module devhub::devcard {
         _ = old_value;
     }
 
-    public entry fun deactivate_card(devhub: &mut DevHub, id: u64, ctx: &mut TxContext){
-        let user_card = object_table::borrow_mut(&mut devhub.cards, id);
+    public entry fun deactivate_card(devhub: &mut DevHub, _id: u64, ctx: &mut TxContext){
+        let user_card = object_table::borrow_mut(&mut devhub.cards, _id);
         assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
 
         user_card.open_to_work = false;
     }
 
-    public fun getCardInfo(devhub: DevHub, id: u64): (
-        String, 
-        address,
-        String,
-        Url,
-        Option<String>,
-        u8,
-        String,
-        String,
-        String,
-        bool,
-    ){
-        let card =  object_table::borrow(&mut devhub.cards, id);
-        (
-            card.name, 
-            card.owner
-            card.title
-            card.img_url
-            card.description
-            card.years_of_exp
-            card.technologies
-            card.portfolio
-            card.contact
-            card.open_to_work
-        )
-    }
+  public fun get_card_info(devhub: &DevHub, _id: u64): (
+    String,
+    address,
+    String,
+    Url,
+    Option<String>,
+    u8,
+    String,
+    String,
+    String,
+    bool,
+  ) {
+    let card = object_table::borrow(&devhub.cards, _id);
+    (
+      card.name,
+      card.owner,
+      card.title,
+      card.img_url,
+      card.description,
+      card.years_of_exp,
+      card.technologies,
+      card.portfolio,
+      card.contact,
+      card.open_to_work
+    )
+  }
 
 }
