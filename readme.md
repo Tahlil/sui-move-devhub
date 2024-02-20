@@ -17,5 +17,5 @@ sudo sui move build --skip-fetch-latest-git-deps
 ```
 - To publish in the contract in devnet:
 ```
-sui client publish --gas-budget 20000000 . --skip-fetch-latest-git-deps
+sudo sui client publish --gas-budget 20000000 . --skip-fetch-latest-git-deps
 ```
