@@ -132,6 +132,12 @@ module devhub::devcard {
         user_card.open_to_work = false;
     }
 
+    public entry fun update_portfolio(devhub: &mut DevHub, id: u64, new_portfolio: vector<u8>, ctx: &mut TxContext) {
+        let user_card = object_table::borrow_mut(&mut devhub.cards, id);
+        assert!(tx_context::sender(ctx) == user_card.owner, NOT_THE_OWNER);
+        user_card.portfolio = string::utf8(new_portfolio);
+    }
+
   public fun get_card_info(devhub: &DevHub, _id: u64): (
     String,
     address,
