@@ -131,4 +131,31 @@ module devhub::devcard {
         user_card.open_to_work = false;
     }
 
+    public fun getCardInfo(devhub: DevHub, id: u64): (
+        String, 
+        address,
+        String,
+        Url,
+        Option<String>,
+        u8,
+        String,
+        String,
+        String,
+        bool,
+    ){
+        let card =  object_table::borrow(&mut devhub.cards, id);
+        (
+            card.name, 
+            card.owner
+            card.title
+            card.img_url
+            card.description
+            card.years_of_exp
+            card.technologies
+            card.portfolio
+            card.contact
+            card.open_to_work
+        )
+    }
+
 }
